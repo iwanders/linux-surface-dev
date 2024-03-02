@@ -4,6 +4,7 @@ Notes and ramblings on components:
 - [fan.md](./fan.md) with notes from developing on the fan.
 - [battery.md](./battery.md) with notes on the battery
 - [misc.md](./misc.md) some random notes.
+- [on kernel development](./kernel_dev) some pointers and notes for myself.
 
 A bunch of helper scripts that were originally in https://github.com/iwanders/nixos-surface
 
