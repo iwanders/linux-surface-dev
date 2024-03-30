@@ -117,6 +117,15 @@ TurboVload              7982 (uint)
 
 ```
 
+Pretty sure that `63854 (uint)` is a signed value;
+```
+>>> struct.pack("H", 63854)
+b'n\xf9'
+>>> struct.unpack("h", struct.pack("H", 63854))
+(-1682,)
+```
+
+
 on AC
 
 ```
