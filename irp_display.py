@@ -411,7 +411,7 @@ class Battery_GetBatteryProp(Base):
     ("ChargingVoltage_mV", ctypes.c_uint16),
     ("ChargingCurrent_mA", ctypes.c_uint16),
     ("Voltage_mV", ctypes.c_uint16),
-    ("Current_mA", ctypes.c_uint16),
+    ("Current_mA", ctypes.c_int16),
     ("TemperatureRaw_dC", ctypes.c_uint16),
     ("TemperatureVtsMax_dC", ctypes.c_uint16),
     ("CellVoltage1_mV", ctypes.c_uint16),
