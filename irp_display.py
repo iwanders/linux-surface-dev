@@ -396,6 +396,66 @@ class Fan_GetSpeed(Base):
     matches = make_matcher(tc=Tc.FAN, cid=0x01, role=Role.Response)
     _fields_ = [("rpm", ctypes.c_uint16)]
 
+class Battery_GetBatteryProp(Base):
+    matches = make_matcher(tc=Tc.BAT, cid=0x22, role=Role.Response)
+    _fields_ = [
+    ("BatteryPhysicalDetect", ctypes.c_bool),
+    ("BatteryStatus", ctypes.c_uint16),
+    ("OperationStatus", ctypes.c_uint32),
+    ("ChargingStatus", ctypes.c_uint32),
+    ("GaugingStatus", ctypes.c_uint32),
+    ("SafetyStatus", ctypes.c_uint32),
+    ("PfStatus", ctypes.c_uint32),
+    ("RelativeStateOfCharge", ctypes.c_uint16),
+    ("StateOfHealth", ctypes.c_uint16),
+    ("ChargingVoltage_mV", ctypes.c_uint16),
+    ("ChargingCurrent_mA", ctypes.c_uint16),
+    ("Voltage_mV", ctypes.c_uint16),
+    ("Current_mA", ctypes.c_uint16),
+    ("TemperatureRaw_dC", ctypes.c_uint16),
+    ("TemperatureVtsMax_dC", ctypes.c_uint16),
+    ("CellVoltage1_mV", ctypes.c_uint16),
+    ("CellVoltage2_mV", ctypes.c_uint16),
+    ("CellVoltage3_mV", ctypes.c_uint16),
+    ("CellVoltage4_mV", ctypes.c_uint16),
+    ("MaxTurboPwr_cW", ctypes.c_uint16),
+    ("SusTurboPwr_cW", ctypes.c_uint16),
+    ("TurboRhfEffective_mOhm", ctypes.c_uint16),
+    ("TurboVload", ctypes.c_uint16),
+    ]
+
+def run_test_bat(args):
+    z = bytes([int(x, 16) for x in """01 e0 00 83 43 40 00 10 48 00 00 5a 18 09 00 00 00 00 00 00 00 00 00 63 00 64 00 00 00 00 00 10 22 00 00 22 00 36 bf 07 11 09 11 00 00 00 00 a2 3c e9 22 4e 00 11 22 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00""".split()])
+    z = Battery_GetBatteryProp.read(z)
+    print(z)
+    """
+BatteryPhysicalDetect   1 (uint)
+BatteryStatus           224 (uint)
+OperationStatus         4211587 (uint)
+ChargingStatus          18448 (uint)
+GaugingStatus           596058 (uint)
+SafetyStatus            0 (uint)
+PfStatus                0 (uint)
+RelativeStateOfCharge   99 (uint)
+StateOfHealth           100 (uint)
+ChargingVoltage_mV      0 (uint)
+ChargingCurrent_mA      0 (uint)
+Voltage_mV              8720 (uint)
+Current_mA              0 (uint)
+TemperatureRaw_dC       34 (uint)
+TemperatureVtsMax_dC    48950 (uint)
+CellVoltage1_mV         4359 (uint)
+CellVoltage2_mV         4361 (uint)
+CellVoltage3_mV         0 (uint)
+CellVoltage4_mV         0 (uint)
+MaxTurboPwr_cW          15522 (uint)
+SusTurboPwr_cW          8937 (uint)
+TurboRhfEffective_mOhm  78 (uint)
+TurboVload              8721 (uint)
+"""
+    print(z)
+
+
 known_messages = [
     Fan_GetSpeed,
     Fan_SetSpeed,
@@ -555,7 +615,15 @@ if __name__ == "__main__":
     interpret_parser.add_argument("-o", "--output", default=None, help="Write json output to this path")
     interpret_parser.set_defaults(func=run_interpret)
 
+
+    test_bat_parser = subparsers.add_parser('test_bat')
+    test_bat_parser.set_defaults(func=run_test_bat)
+
     args = parser.parse_args()
+    if args.command.startswith("test_"):
+        args.func(args)
+        sys.exit(0)
+        
 
     data = load(args.path)
 
